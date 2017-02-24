@@ -2,6 +2,8 @@ import {assert} from 'chai';
 import {payload, people} from '../serialization';
 // you can ge row data form payload.js file
 
+const {data} = payload;
+
 describe('payload', function () {
 
   // in this tests try to use as least as possible number of assignments
@@ -10,9 +12,9 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    answer = data.filter((item) => {
+      return item.type === 'Car' && item.owners.some(owner => owner.personalInfo.age > 20);
+    }).length;
 
     assert.equal(answer, 2);
 
@@ -22,9 +24,11 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const allColors = data.filter(item => item.type === 'Car')
+                          .map(item => item.attrs.color);
+
+    answer = allColors.filter((item, pos) => allColors.indexOf(item) == pos)
+                      .join(',');
 
     assert.equal(answer, 'red,yellow');
 
@@ -34,9 +38,15 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    const vehicles = [
+      'Car',
+      'Bicycle',
+    ];
+
+    const allVehicles = data.filter(item => vehicles.indexOf(item.type) >= 0);
+
+    answer = allVehicles.map(item => item.id)
+                        .join(',');
 
     assert.equal(answer, '1,3,6,4,2');
 
@@ -46,9 +56,8 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    answer = data.map(item => item.attrs.price)
+                 .reduce((prev, current) => prev + current, 0);
 
     assert.equal(answer, 42800);
 
@@ -57,10 +66,12 @@ describe('payload', function () {
   it('price of all things john has own', function () {
 
     let answer;
+    const john = people.johnSmith;
 
-    /**
-     * you code here
-     */
+    const johnsThings = data.filter(item => item.owners.indexOf(john) !== -1);
+
+    answer = johnsThings.map(item => item.attrs.price)
+                        .reduce((prev, current) => prev + current, 0);
 
     assert.equal(answer, 25000);
 
@@ -70,9 +81,9 @@ describe('payload', function () {
 
     let answer;
 
-    /**
-     * you code here
-     */
+    answer = Object.keys(people)
+                         .map(item => people[item].cities)
+                         .join(',');
 
     assert.equal(answer, 'New York,Boston,Columbia,Rapture');
 
