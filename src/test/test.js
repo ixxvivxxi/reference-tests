@@ -27,7 +27,7 @@ describe('payload', function () {
     const allColors = data.filter(item => item.type === 'Car')
                           .map(item => item.attrs.color);
 
-    answer = allColors.filter((item, pos) => allColors.indexOf(item) == pos)
+    answer = allColors.filter((item, pos) => allColors.indexOf(item) === pos)
                       .join(',');
 
     assert.equal(answer, 'red,yellow');
@@ -81,9 +81,12 @@ describe('payload', function () {
 
     let answer;
 
-    answer = Object.keys(people)
-                         .map(item => people[item].cities)
-                         .join(',');
+    const owners = data.reduce((prev, current) => [...current.owners, ...prev]);
+
+    answer = owners.filter((item, pos) => owners.indexOf(item) === pos)
+                   .sort((a, b) => a.lastName < b.lastName)
+                   .map(item => item.cities)
+                   .join(',');
 
     assert.equal(answer, 'New York,Boston,Columbia,Rapture');
 
